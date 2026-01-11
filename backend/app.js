@@ -1,3 +1,4 @@
+// backend/app.js
 const express = require('express');
 const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
@@ -7,7 +8,13 @@ const errorHandler = require('./middleware/errorHandler');
 const app = express();
 
 // Middleware
-app.use(cors());
+if (process.env.NODE_ENV === 'development') {
+    app.use(cors()); // autoriser tous en dev
+} else {
+    app.use(cors({
+        origin: process.env.FRONTEND_URL
+    }));
+}
 app.use(express.json());
 
 // Request logging (dev)
